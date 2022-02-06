@@ -1,7 +1,6 @@
 # Advent of Code 2021
 # Day 4
 
-from calendar import c
 import pandas as pd
 
 # Read bingo number row, first line only
