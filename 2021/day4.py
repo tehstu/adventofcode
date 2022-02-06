@@ -5,11 +5,11 @@ from calendar import c
 import pandas as pd
 
 # Read bingo number row, first line only
-numbers = pd.read_csv('c:/code/adventofcode/2021/day4_input.txt', header=None, nrows=1)
+numbers = pd.read_csv('day4_input.txt', header=None, nrows=1)
 
 # Read bingo card data (blank rows automatically ignored)
 colspecs=[(0,2),(3,5),(6,8),(9,11),(12,14)]
-df = pd.read_fwf('c:/code/adventofcode/2021/day4_input.txt', header=None, colspecs=colspecs)
+df = pd.read_fwf('day4_input.txt', header=None, colspecs=colspecs)
 
 # Drop the number row
 df.drop([0],inplace=True)
