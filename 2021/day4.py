@@ -1,33 +1,68 @@
 # Advent of Code 2021
 # Day 4
 
+from calendar import c
 import pandas as pd
-from progress.bar import Bar
 
 # Read bingo number row, first line only
-numbers = pd.read_csv('day4_input.txt', header=None, nrows=1)
+numbers = pd.read_csv('c:/code/adventofcode/2021/day4_input.txt', header=None, nrows=1)
 
 # Read bingo card data (blank rows automatically ignored)
 colspecs=[(0,2),(3,5),(6,8),(9,11),(12,14)]
-cards_df = pd.read_fwf('day4_input.txt', header=None, colspecs=colspecs)
+df = pd.read_fwf('c:/code/adventofcode/2021/day4_input.txt', header=None, colspecs=colspecs)
 
 # Drop the number row
-cards_df.drop([0],inplace=True)
+df.drop([0],inplace=True)
 
-line_df = pd.DataFrame(['X','X','X','X','X'])
+# Convert dtype (read_fwf read last column as object, not int64)
+cards_df = df.astype('int64')
 
-# Provide progress bar for fun
-with Bar('Processing') as bar:
-    # Iterate over bingo numbers
-    for i in range(len(numbers.columns)):
-        # Mark X for numbers on cards matching bingo number
-        num = numbers.iloc[0,i]
-        cards_df.replace(num, 'X', inplace=True)
+"""
+Unsure how to do this the "Pythonic" way of using Pandas functions,
+will therefore iterate over rows/cols.
 
-        # Search for completed bingo rows
-        for index, row in cards_df.iterrows():
-            if line_df.equals(row):
-                print("Match at line: ", index)
+"""
+winning_card = 0
+winning_number = 0
 
-        # Search for completed bingo columns
-        bar.next()
+# Iterate over numbers
+for num in range(len(numbers.columns)):
+    
+    # Replace next number with X if present on cards
+    cards_df.replace(numbers.iloc[0,num], 'X', inplace=True)  
+
+    # Iterate over each bingo card
+    for i in range(0,len(cards_df.index),5):
+        row_x = 0
+        col_x = 0
+        # Scan card's rows for 5 concurrent Xs
+        for j in range(5):
+            row_x = 0
+            for k in range(5):
+                if cards_df.iloc[i+j,k] == "X":
+                    row_x += 1
+        
+        # Scan card's columns for 5 concurrent Xs
+        for j in range(5):
+            col_x = 0
+            for k in range(5):
+                if cards_df.iloc[i+k,j] == "X":
+                    col_x += 1
+
+        # Check to see if a row or column is all X
+        if row_x == 5 or col_x == 5:
+            winning_number = numbers.iloc[0,num]
+            winning_card = i
+            break
+
+    if winning_card != 0:
+        break
+
+# Sum unmarked numbers on winning card
+winning_sum = 0
+for i in range(5):
+    for j in range(5):
+        if cards_df.iloc[winning_card+i,j] != "X":
+            winning_sum += cards_df.iloc[winning_card+i,j]
+
+print("Answer :", winning_sum * winning_number)
