@@ -15,7 +15,6 @@ df.drop([0],inplace=True)
 
 # Convert dtype (read_fwf read last column as object, not int64)
 cards_df = df.astype('int64')
-original_df = cards_df
 
 """
 Unsure how to do this the "Pythonic" way of using Pandas functions,
@@ -24,25 +23,12 @@ will therefore iterate over rows/cols.
 """
 winning_card = 0
 winning_number = 0
-last_number = numbers.iloc[0,-1]
 
 # Iterate over numbers
 for num in range(len(numbers.columns)):
-   
+    
     # Replace next number with X if present on cards
     cards_df.replace(numbers.iloc[0,num], 'X', inplace=True)  
-
-# Iterate over each bingo card
-for i in range(0,len(cards_df.index),5):
-
-    # For each row in card, look for presence of last number
-    for j in range(5):
-        for k in range(5):
-            if original_df.iloc[i+j,k] == last_number:
-            # TO DO: compare row to original_df to see if it's part of a bingo 
-
-    # For each column in card, look for presence of last number
-    # TO DO: as above
 
     # # Iterate over each bingo card
     # for i in range(0,len(cards_df.index),5):
@@ -66,16 +52,17 @@ for i in range(0,len(cards_df.index),5):
     #     if row_x == 5 or col_x == 5:
     #         winning_number = numbers.iloc[0,num]
     #         winning_card = i
-    #         break
+    #         print(winning_card)
 
-    # if winning_card != 0:
-    #     break
 
-# Sum unmarked numbers on winning card
-winning_sum = 0
-for i in range(5):
-    for j in range(5):
-        if cards_df.iloc[winning_card+i,j] != "X":
-            winning_sum += cards_df.iloc[winning_card+i,j]
 
-print("Answer :", winning_sum * winning_number)
+# # Sum unmarked numbers on winning card
+# winning_sum = 0
+# for i in range(5):
+#     for j in range(5):
+#         if cards_df.iloc[winning_card+i,j] != "X":
+#             winning_sum += cards_df.iloc[winning_card+i,j]
+
+# print(winning_card)
+# print(cards_df)
+# print("Answer :", winning_sum * winning_number)
